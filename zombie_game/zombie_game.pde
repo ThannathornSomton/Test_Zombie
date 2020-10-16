@@ -157,6 +157,7 @@ public class Shooter {
 public class Bullet {
   float positionX, positionY, speed, move, direction; //set attribute
 
+
   Bullet(float x, float y, float direct) { //set start point and direction
     positionX = x;
     positionY = y;
@@ -211,6 +212,7 @@ public class Bullet {
 public class Zombie {
   float positionX, positionY, size, speed, zeta;
   int count = 0;
+  boolean cantWalk = false;
   Zombie() { //default constructor
     positionX = width/2;
     positionY = height/2;
@@ -240,6 +242,7 @@ public class Zombie {
     //draw zombie and arm
   }
   public void move(float x, float y) {
+    if (!cantWalk){
     float targetX = x;
     float targetY = y;
     float distanceX = targetX-positionX; //find distance
@@ -253,11 +256,13 @@ public class Zombie {
     else if (targetX<positionX && targetY < positionY){
       zeta -= PI;
     }
+    }
 
 
   }
 
   public void overlap(Zombie obj){
+    if(!cantWalk){
     if (dist(positionX,positionY,obj.positionX,obj.positionY) < 100 && obj.positionX > positionX){ //if is overlap and obj is below that this
       positionX -= 1;  //detach each other
       obj.positionX += 1;
@@ -268,7 +273,7 @@ public class Zombie {
       obj.positionY += 1;
 
     }
-
+    }
 
   }
   public boolean player_die(float x,float y){
@@ -289,6 +294,8 @@ public class Zombie {
       if (dis < size/2){ //if distance  not over radius  means bullet hit zombie
       count++;
       this.size *= 1.2;
+      cantWalk = true;
+      
       if(count >=3){
         if (i < zombie.length-1){
           arraycopy(zombie, zombieNumber+1, zombie, zombieNumber, zombie.length-(zombieNumber+1));  //move i object to most right array
